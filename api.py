@@ -26,7 +26,7 @@ def populate_db():
       memes = json.loads(f.read())
       for meme in memes:
         try:
-          db.session.add(Meme(url=meme['url']))
+          db.session.add(Meme(url=meme['url'], temp=False))
           db.session.commit()
         except: pass
 

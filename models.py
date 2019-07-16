@@ -3,9 +3,11 @@ from database import db
 class Meme(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(240), unique=True, nullable=False)
+    temp = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, url):
-        self.url = url;
+    def __init__(self, url, temp):
+        self.url = url
+        self.temp = temp
     
     def __repr__(self):
         return '<Meme %r' % self.url

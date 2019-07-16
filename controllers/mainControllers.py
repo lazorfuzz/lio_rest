@@ -6,10 +6,12 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import traceback
 import random
+import json
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('url')
 parser.add_argument('meme_auth')
+parser.add_argument('temp')
 parser.add_argument('user_id')
 parser.add_argument('news_keyword')
 parser.add_argument('X-Authorization', location='headers')
@@ -37,19 +39,20 @@ def authenticate(func):
 class MemeController(Resource):
   def get(self):
     memes = Meme.query.all()
-    memes_list = list(map(lambda m: { 'url': m.url, 'id': m.id }, memes))
+    memes_list = list(map(lambda m: { 'url': m.url, 'id': m.id, 'temp': m.temp }, memes))
     return memes_list
   
   def post(self):
     try:
       args = parser.parse_args()
       auth = args['meme_auth']
+      temp = args['temp'] is '1' or args['temp'] is None
       if auth != 'certifiedmemer':
         return {'message': 'Bad meme authentication'}, 401
       meme_url = args['url']
       existing = Meme.query.filter_by(url=meme_url).first()
       if not existing:
-        meme = Meme(url=meme_url)
+        meme = Meme(url=meme_url, temp=temp)
         db.session.add(meme)
         db.session.commit()
         return {'status': 'success'}
@@ -62,8 +65,14 @@ class MemeController(Resource):
 class RandomMemeController(Resource):
   def get(self):
     memes = Meme.query.all()
-    meme = memes[random.randint(0, len(memes))]
-    return {'url': meme.url, 'id': meme.id}
+    meme = memes[random.randint(0, len(memes) - 1)]
+    data = {'url': meme.url, 'id': meme.id}
+    temp_memes = Meme.query.filter_by(temp=True).all()
+    if len(temp_memes) > 200:
+      for m in temp_memes[:180]:
+        db.session.remove(m)
+      db.session.commit()
+    return data
 
 class NewsController(Resource):
   def get(self, news_keyword):
