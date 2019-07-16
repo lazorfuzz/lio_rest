@@ -15,7 +15,7 @@ def find():
     try:
       url = meme['data']['url']
       api_endpoint = os.environ['API_ENDPOINT']
-      post_data = urlencode({'url': url, 'meme_auth': 'certifiedmemer', 'temp': True}).encode('ascii')
+      post_data = urlencode({'url': url, 'meme_auth': os.environ['AUTH'], 'temp': '1'}).encode('ascii')
       req = Request(url=api_endpoint, method='POST', data=post_data)
       with urlopen(req) as client:
         data = client.read()
