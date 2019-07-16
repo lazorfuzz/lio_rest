@@ -30,7 +30,7 @@ def populate_db():
           db.session.commit()
         except: pass
 
-populate_db()
+# populate_db()
 
 if __name__ == '__main__':
     app.run(debug=True)
