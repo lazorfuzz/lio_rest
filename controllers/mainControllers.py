@@ -70,7 +70,7 @@ class RandomMemeController(Resource):
     temp_memes = Meme.query.filter_by(temp=True).all()
     if len(temp_memes) > 200:
       for m in temp_memes[:180]:
-        db.session.remove(m)
+        db.session.delete(m)
       db.session.commit()
     return data
 
