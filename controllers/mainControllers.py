@@ -145,7 +145,9 @@ class MemeController(Resource):
         dict -- Status or error message
     """
     try:
-      meme = Meme.query.filter_by(id=meme_id).first_or_404()
+      meme = Meme.query.filter_by(id=meme_id).first()
+      if not meme:
+        return {'message': 'Meme not found'}, 404
       return {'id': meme.id, 'url': meme.url}
     except Exception as e:
       traceback.print_exc()
