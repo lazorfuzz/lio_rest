@@ -16,7 +16,8 @@ db.init_app(app)
 db.create_all(app=app)
 api = Api(app)
 
-api.add_resource(mainControllers.MemeController, '/memes')
+api.add_resource(mainControllers.MemeList, '/memes')
+api.add_resource(mainControllers.MemeController, '/memes/<meme_id>')
 api.add_resource(mainControllers.RandomMemeController, '/memes/random')
 api.add_resource(mainControllers.NewsController, '/news/<news_keyword>')
 

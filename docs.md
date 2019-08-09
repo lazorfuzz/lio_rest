@@ -46,6 +46,34 @@ Arguments:
 Returns:
     func -- The target method
 
+## MemeList
+```python
+MemeList(self, /, *args, **kwargs)
+```
+
+### methods
+set() -> new empty set object
+set(iterable) -> new set object
+
+Build an unordered collection of unique elements.
+### get
+```python
+MemeList.get(self)
+```
+Handles GET request for /memes endpoint
+
+Returns:
+    list -- A list of memes
+
+### post
+```python
+MemeList.post(self)
+```
+Handles POST requests for /memes endpoint
+
+Returns:
+    dict -- Status or error message
+
 ## MemeController
 ```python
 MemeController(self, /, *args, **kwargs)
@@ -58,18 +86,24 @@ set(iterable) -> new set object
 Build an unordered collection of unique elements.
 ### get
 ```python
-MemeController.get(self)
+MemeController.get(self, meme_id)
 ```
-Handles GET request for /memes endpoint
+Handles GET requests for /memes/<meme_id> endpoint
+
+Arguments:
+    meme_id {int} -- Meme ID number
 
 Returns:
-    list -- A list of memes
+    dict -- Status or error message
 
-### post
+### delete
 ```python
-MemeController.post(self)
+MemeController.delete(self, meme_id)
 ```
-Handles POST requests for /memes endpoint
+Handles DELETE requests for /memes/<meme_id> endpoint
+
+Arguments:
+    meme_id {int} -- Meme ID number
 
 Returns:
     dict -- Status or error message

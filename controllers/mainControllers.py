@@ -97,7 +97,7 @@ def authenticate(func):
     return {'message': 'Invalid auth token.'}, 403
   return wrapper
 
-class MemeController(Resource):
+class MemeList(Resource):
   def get(self):
     """Handles GET request for /memes endpoint
     
@@ -130,6 +130,45 @@ class MemeController(Resource):
         db.session.commit()
         return {'status': 'success'}
       return {'message': 'Meme already exists!'}, 401
+    except Exception as e:
+      traceback.print_exc()
+      return generic_400(e)
+
+class MemeController(Resource):
+  def get(self, meme_id):
+    """Handles GET requests for /memes/<meme_id> endpoint
+    
+    Arguments:
+        meme_id {int} -- Meme ID number
+    
+    Returns:
+        dict -- Status or error message
+    """
+    try:
+      meme = Meme.query.filter_by(id=meme_id).first_or_404()
+      return {'id': meme.id, 'url': meme.url}
+    except Exception as e:
+      traceback.print_exc()
+      return generic_400(e)
+  
+  def delete(self, meme_id):
+    """Handles DELETE requests for /memes/<meme_id> endpoint
+    
+    Arguments:
+        meme_id {int} -- Meme ID number
+    
+    Returns:
+        dict -- Status or error message
+    """
+    try:
+      args = parser.parse_args()
+      auth = args['meme_auth']
+      if auth != auth_key:
+        return {'message': 'Bad meme authentication'}, 401
+      meme = Meme.query.filter_by(id=meme_id).first_or_404()
+      db.session.delete(meme)
+      db.session.commit()
+      return {'message': 'success'}
     except Exception as e:
       traceback.print_exc()
       return generic_400(e)
