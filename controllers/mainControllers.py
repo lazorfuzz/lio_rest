@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from database import db
+from secrets import auth_key
 from models import Meme, User, AuthToken
 from functools import wraps
 from bs4 import BeautifulSoup
@@ -47,7 +48,7 @@ class MemeController(Resource):
       args = parser.parse_args()
       auth = args['meme_auth']
       temp = args['temp'] is '1' or args['temp'] is None
-      if auth != 'certifiedmemer':
+      if auth != auth_key:
         return {'message': 'Bad meme authentication'}, 401
       meme_url = args['url']
       existing = Meme.query.filter_by(url=meme_url).first()
