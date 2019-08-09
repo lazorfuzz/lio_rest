@@ -121,6 +121,8 @@ class MemeController(Resource):
       if auth != auth_key:
         return {'message': 'Bad meme authentication'}, 401
       meme_url = args['url']
+      if not meme_url:
+        return {'message': 'No empty memes'}, 401
       existing = Meme.query.filter_by(url=meme_url).first()
       if not existing:
         meme = Meme(url=meme_url, temp=temp)
